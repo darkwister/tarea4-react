@@ -28,7 +28,7 @@ const App = () => {
     fetch('http://www.raydelto.org/agenda.php', {
       method: 'POST',
       body: JSON.stringify(contacto),
-      headers: {
+      header: {
         'Content-Type': 'application/json',
       },
     })

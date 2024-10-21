@@ -1,4 +1,6 @@
 import React from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 const SearchBar = ({ onSearch }) => {
   return (
@@ -10,7 +12,7 @@ const SearchBar = ({ onSearch }) => {
         onChange={(e) => onSearch(e.target.value)}
       />
       <button className="search_button">
-        <i className="fa fa-search"></i>
+        <FontAwesomeIcon icon={faSearch} />
       </button>
     </div>
   );
