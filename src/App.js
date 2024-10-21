@@ -1,25 +1,69 @@
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
+import ContactList from './components/ContactList';
+import SearchBar from './components/SearchBar';
+import ContactForm from './components/ContactForm';
 import './App.css';
 
-function App() {
+const App = () => {
+  const [contactos, setContactos] = useState([]);
+  const [filteredContactos, setFilteredContactos] = useState([]);
+
+  useEffect(() => {
+    cargarContactos();
+  }, []);
+
+  const cargarContactos = () => {
+    fetch('http://www.raydelto.org/agenda.php')
+      .then((response) => response.json())
+      .then((data) => {
+        setContactos(data);
+        setFilteredContactos(data); 
+      })
+      .catch((error) => {
+        console.error('Error al cargar los contactos:', error);
+      });
+  };
+
+  const registrarContacto = (contacto) => {
+    fetch('http://www.raydelto.org/agenda.php', {
+      method: 'POST',
+      body: JSON.stringify(contacto),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('Contacto registrado:', data);
+        cargarContactos(); 
+      })
+      .catch((error) => {
+        console.error('Error al registrar el contacto:', error);
+      });
+  };
+
+  const buscarContacto = (searchTerm) => {
+    if (searchTerm === '') {
+      setFilteredContactos(contactos);
+    } else {
+      const resultadosFiltrados = contactos.filter((contacto) =>
+        contacto.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        contacto.apellido.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredContactos(resultadosFiltrados);
+    }
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="agenda">
+      <section className="contactos">Lista de contactos</section>
+      <SearchBar onSearch={buscarContacto} />
+      <section className="contactos_content">
+        <ContactList contactos={filteredContactos} />
+      </section>
+      <ContactForm onAddContact={registrarContacto} />
     </div>
   );
-}
+};
 
 export default App;
