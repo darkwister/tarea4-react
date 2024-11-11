@@ -3,4 +3,4 @@ Mismas funcionalidades que en el proyecto original.
 
 imagen:
 
-![imagen](img/image.jpeg)
+![imagen](img/imgReact.jpeg)
